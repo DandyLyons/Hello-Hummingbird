@@ -50,5 +50,9 @@ func buildRouter() -> Router<AppRequestContext> {
     router.get("/") { _,_ in
         return "Hello!"
     }
+
+    router.get("/health") { _,_ -> HTTPResponse.Status in 
+        return .ok
+    }
     return router
 }

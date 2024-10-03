@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "swift-lldb",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:Hello Hummingbird}/Todos",
+            "name": "Debug HummingbirdTodos (Todos)",
+            "program": "${workspaceFolder:Hello Hummingbird}/Todos/.build/debug/HummingbirdTodos",
+            "preLaunchTask": "swift: Build Debug HummingbirdTodos (Todos)"
+        },
+        {
+            "type": "swift-lldb",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:Hello Hummingbird}/Todos",
+            "name": "Release HummingbirdTodos (Todos)",
+            "program": "${workspaceFolder:Hello Hummingbird}/Todos/.build/release/HummingbirdTodos",
+            "preLaunchTask": "swift: Build Release HummingbirdTodos (Todos)"
+        }
+    ]
+}
