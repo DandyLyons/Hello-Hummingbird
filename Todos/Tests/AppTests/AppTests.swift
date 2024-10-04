@@ -132,11 +132,12 @@ struct AppTests {
             #expect(deleteStatus2 == .badRequest)
         }
     }
-    @Test func testGettingTodoWithInvalidUUIDReturnsNil() async throws {
+    @Test func testGettingTodoWithInvalidUUIDReturnsBadRequest() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in 
-            let get = try await get(id: UUID(), client: client)
-            #expect(get == nil)
+            try await client.execute(uri: "/todos/123", method: .get) { response in 
+                #expect(response.status == .badRequest)
+            }
         }
     }
     @Test func test30ConcurrentlyCreatedTodosAreAllCreated() async throws {
