@@ -15,7 +15,25 @@ struct TodoController<Repository: TodoRepository> {
             .delete(":id", use: delete(request:context:))
             .delete(use: deleteAll(request:context:))
     }
+    
 
+    /// Get todo endpoint
+    /// - Parameters:
+    ///   - request: the request
+    ///   - context: the context of the request
+    ///
+    /// - Throws: an `HTTPError` if the UUID string is invalid
+    /// - Returns:
+    /// 
+    /// >nil:
+    /// > If the endpoint returns nil because it could not find a todo this will automatically return 
+    /// a 204 (No Content) HTTP response to the client.
+    /// 
+    /// >HTTPError:
+    /// >This endpoint has a few other features. If it fails to convert the id to a UUID then it throws 
+    /// an HTTPError. This is an error that can be converted by the server to a valid HTTP response. If 
+    /// the server receives an error it cannot convert to an HTTP response it will return a 500 (Internal 
+    /// Server Error) HTTP error to the client.
     @Sendable func get(request: Request, context: some RequestContext) async throws -> Todo? {
         let id = try context.parameters.require("id", as: UUID.self)
         return try await self.repository.get(id: id)
