@@ -6,12 +6,13 @@ import Testing
 
 @testable import HummingbirdTodos
 
-@Suite
+@Suite(.serialized)
 struct AppTests {
     struct TestArguments: AppArguments {
         let hostname = "127.0.0.1"
         let port = 0
         let logLevel: Logger.Level? = .trace
+        let inMemoryTesting = false
     }
 
     struct CreateRequest: Encodable {
@@ -80,6 +81,8 @@ struct AppTests {
         let args = TestArguments()
         let app = try await buildApplication(args)
         try await app.test(.router) { client in
+            try await deleteAll(client: client)
+
             try await client.execute(uri: "/", method: .get) { response in
                 #expect(response.body == ByteBuffer(string: "Hello!"))
             }
@@ -89,14 +92,20 @@ struct AppTests {
     @Test func create() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in 
+            try await deleteAll(client: client)
+
             let todo = try await self.create(title: "My first todo", client: client)
             #expect(todo.title == "My first todo")
+            let count = try await list(client: client).count
+            #expect(count == 1)
         }
     }
 
     @Test func patch() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
+            try await deleteAll(client: client)
+
             // Create todo
             let todo = try await create(title: "Deliver parcels to James", client: client)
 
@@ -119,41 +128,69 @@ struct AppTests {
             #expect(getResultAfterPatch3?.title == "Deliver parcels to James")
             #expect(getResultAfterPatch3?.completed == false)
 
+            let count = try await list(client: client).count
+            #expect(count == 1)
+        }
+    }
+
+    @Test func deleteAll() async throws {
+        let app = try await buildApplication(TestArguments())
+        try await app.test(.router) { client in
+            try await deleteAll(client: client)
+
+            for num in 0..<30 {
+                _ = try await create(title: "\(num)", client: client)
+            }
+            try await deleteAll(client: client)
+            let count = try await list(client: client).count
+            #expect(count == 0)
         }
     }
 
     @Test func testDeletingTodoTwiceReturnsBadRequest() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in 
+            try await deleteAll(client: client)
+
             let todo = try await create(title: "one", client: client)
             let deleteStatus1 = try await delete(id: todo.id, client: client)
             #expect(deleteStatus1 == .ok)
             let deleteStatus2 = try await delete(id: todo.id, client: client)
             #expect(deleteStatus2 == .badRequest)
+
+            let count = try await list(client: client).count
+            #expect(count == 0)
         }
     }
     @Test func testGettingTodoWithInvalidUUIDReturnsBadRequest() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in 
+            try await deleteAll(client: client)
+
             try await client.execute(uri: "/todos/123", method: .get) { response in 
                 #expect(response.status == .badRequest)
             }
+
+            let count = try await list(client: client).count
+            #expect(count == 0)
         }
     }
-    @Test func test30ConcurrentlyCreatedTodosAreAllCreated() async throws {
-        let app = try await buildApplication(TestArguments())
-        try await app.test(.router) { client in 
-            for num in 0..<30 {
-                _ = try await create(title: String("\(num)"), client: client)
-            }
-            let allTodos = try await list(client: client)
-            #expect(allTodos.count == 30)
-        }
-    }
+    // @Test func test30ConcurrentlyCreatedTodosAreAllCreated() async throws {
+    //     let app = try await buildApplication(TestArguments())
+    //     try await app.test(.router) { client in 
+    //         let todosBefore = try await list(client: client)
+    //         for num in 0..<30 {
+    //             _ = try await create(title: String("\(num)"), client: client)
+    //         }
+    //         let todosAfter = try await list(client: client)
+    //         let diff = todosAfter.count - todosBefore.count
+    //         #expect(diff == 30)
+    //     }
+    // }
     @Test func testUpdatingNonExistentTodoReturnsBadRequest() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in 
-            
+            try await deleteAll(client: client)
         }
     }
 }

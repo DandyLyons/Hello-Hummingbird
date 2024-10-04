@@ -17,6 +17,25 @@
 			"problemMatcher": [],
 			"label": "swift: Build All (Todos)",
 			"detail": "swift build --build-tests -Xswiftc -diagnostic-style=llvm"
+		},
+		{
+			"type": "swift",
+			"args": [
+				"build",
+				"--product",
+				"HummingbirdTodos",
+				"-Xswiftc",
+				"-diagnostic-style=llvm"
+			],
+			"env": {},
+			"cwd": "/Users/daniellyons/Developer/Hello Hummingbird/Todos",
+			"disableTaskQueue": true,
+			"dontTriggerTestDiscovery": true,
+			"showBuildStatus": "swiftStatus",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "swift: Build Debug HummingbirdTodos (Todos)",
+			"detail": "swift build --product HummingbirdTodos -Xswiftc -diagnostic-style=llvm"
 		}
 	]
 }

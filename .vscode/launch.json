@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "type": "swift-lldb",
+            "type": "lldb",
             "request": "launch",
             "args": [],
             "cwd": "${workspaceFolder:Hello Hummingbird}/Todos",
@@ -10,31 +10,13 @@
             "preLaunchTask": "swift: Build Debug HummingbirdTodos (Todos)"
         },
         {
-            "type": "swift-lldb",
+            "type": "lldb",
             "request": "launch",
             "args": [],
             "cwd": "${workspaceFolder:Hello Hummingbird}/Todos",
             "name": "Release HummingbirdTodos (Todos)",
             "program": "${workspaceFolder:Hello Hummingbird}/Todos/.build/release/HummingbirdTodos",
             "preLaunchTask": "swift: Build Release HummingbirdTodos (Todos)"
-        },
-        {
-            "type": "swift-lldb",
-            "request": "launch",
-            "args": [],
-            "cwd": "${workspaceFolder:Hello Hummingbird}/template",
-            "name": "Debug {{HB_EXECUTABLE_NAME}} (template)",
-            "program": "${workspaceFolder:Hello Hummingbird}/template/.build/debug/{{HB_EXECUTABLE_NAME}}",
-            "preLaunchTask": "swift: Build Debug {{HB_EXECUTABLE_NAME}} (template)"
-        },
-        {
-            "type": "swift-lldb",
-            "request": "launch",
-            "args": [],
-            "cwd": "${workspaceFolder:Hello Hummingbird}/template",
-            "name": "Release {{HB_EXECUTABLE_NAME}} (template)",
-            "program": "${workspaceFolder:Hello Hummingbird}/template/.build/release/{{HB_EXECUTABLE_NAME}}",
-            "preLaunchTask": "swift: Build Release {{HB_EXECUTABLE_NAME}} (template)"
         }
     ]
 }
